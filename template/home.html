@@ -3,6 +3,10 @@
 <head>
 	<title>Tulpa birthdays and age</title>
 	<link href="/static/css/screen.css" rel="stylesheet" type="text/css" />
+	<link href="/static/css/jdpicker.css" rel="stylesheet" type="text/css" />
+	<script src="/static/js/jquery.js"></script>
+	<script src="/static/js/jquery.jdpicker.js"></script>
+	<script src="/static/js/main.js"></script>
 </head>
 <body>
 	<header>Tulpa birthday and age</header>
@@ -12,11 +16,17 @@
 
 	</ul>
 
-	Not in list? <a href="#">Add your tulpa</a>
+	Not in list? <a href="#" id="addTulpaLink">Add your tulpa</a>
+	<div id="addTulpaPrompt" class="hidebar" style="display: none;">
+		<input type="text" placeholder="Tulpa's name" />&nbsp;
+		<input type="text" placeholder="Host's name" title="Please keep this identical to all your other tulpas" />&nbsp;
+		<input type="text" placeholder="Birth date" class="jdpicker" style="width: 100px;" />&nbsp;
+		<input type="text" placeholder="Secret key" title="The secret key is used for editing or deleting the tulpa's data" /> <span class="dot" title="The secret key is used for editing or deleting the tulpa's data">(?)</span>
+		<button>Submit</button>
+	</div>
 
 	<h2>All tulpas</h2>
 
-	<script src="/static/js/main.js"></script>
 	</div>
 	<footer>
 		<p>Currently tracking {{#Info}}{{{TulpaCount}}}{{/Info}} tulpas from {{#Info}}{{{HostCount}}}{{/Info}} hosts - <a href="https://github.com/Hamcha/tulpabday">Source code is on Github!</a></p>
