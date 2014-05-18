@@ -44,7 +44,7 @@ func getInfo() {
 	}
 }
 
-func hasTulpa(hname string, tname string) bool {
+func hasTulpa(hname, tname string) bool {
 	return database.Exists("tulpa." + hname + "." + tname)
 }
 
@@ -55,7 +55,8 @@ func getTulpa(hname string, tname string) (Tulpa, error) {
 	return out, err
 }
 
-func getTulpasByHost(hname string) ([]Tulpa, error) {
+func getTulpaListByHost(hname string) ([]string, error) {
+
 	// Check if the host exists
 	if !database.Exists("host." + hname) {
 		return nil, errors.New("Host not found")
@@ -65,6 +66,16 @@ func getTulpasByHost(hname string) ([]Tulpa, error) {
 	var hostval []string
 	hostdata := database.Unjar("host." + hname)
 	err := json.Unmarshal(hostdata, &hostval)
+	if err != nil {
+		return nil, err
+	}
+
+	return hostval, nil
+}
+
+func getTulpasByHost(hname string) ([]Tulpa, error) {
+
+	hostval, err := getTulpaListByHost(hname)
 	if err != nil {
 		return nil, err
 	}
@@ -79,4 +90,42 @@ func getTulpasByHost(hname string) ([]Tulpa, error) {
 	}
 
 	return tulpas, nil
+}
+
+func setNewTulpa(tulpa Tulpa) error {
+
+	// Put tulpa record into database
+	jsonTulpa, err := json.Marshal(tulpa)
+	if err != nil {
+		return err
+	}
+	database.Jar("tulpa."+tulpa.Host+"."+tulpa.Name, jsonTulpa)
+
+	// Put tulpa into tulpalist
+	tulpas = append(tulpas, tulpa.Name)
+	jsontulpa, err := json.Marshal(tulpas)
+	if err != nil {
+		return err
+	}
+	database.Jar("tulpalist", jsontulpa)
+
+	// Put tulpa into host's list
+	host := tulpa.Host
+	hostlist := make([]string, 0)
+	if database.Exists("host." + host) {
+		hostlist, err = getTulpaListByHost(host)
+		if err != nil {
+			return err
+		}
+	}
+	hostlist = append(hostlist, tulpa.Name)
+
+	// Update host's list on the database
+	jsonhost, err := json.Marshal(hostlist)
+	if err != nil {
+		return err
+	}
+	database.Jar("host."+host, jsonhost)
+
+	return nil
 }
