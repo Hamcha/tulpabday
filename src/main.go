@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
 	"github.com/gorilla/mux"
@@ -11,6 +10,7 @@ import (
 
 var database goleg.Database
 var info SiteInfo
+var tulpas []string
 
 func main() {
 	// Get command-line flags
@@ -42,26 +42,4 @@ func main() {
 
 	fmt.Println("Listening on " + *listen)
 	http.ListenAndServe(*listen, nil)
-}
-
-func getInfo() {
-	// Check if we need to initialize the database
-	// and setup SiteInfo
-	if !database.Exists("siteinfo") {
-		info = SiteInfo{
-			TulpaCount: 0,
-			HostCount:  0,
-		}
-		jsoninfo, err := json.Marshal(info)
-		if err != nil {
-			panic(err.Error())
-		}
-		database.Jar("siteinfo", jsoninfo)
-	} else {
-		jsoninfo := database.Unjar("siteinfo")
-		err := json.Unmarshal(jsoninfo, &info)
-		if err != nil {
-			panic(err.Error())
-		}
-	}
 }
