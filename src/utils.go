@@ -6,26 +6,6 @@ import (
 )
 
 func getInfo() {
-	// Check if we need to initialize the database
-	// and setup SiteInfo
-	if !database.Exists("siteinfo") {
-		info = SiteInfo{
-			TulpaCount: 0,
-			HostCount:  0,
-		}
-		jsoninfo, err := json.Marshal(info)
-		if err != nil {
-			panic(err.Error())
-		}
-		database.Jar("siteinfo", jsoninfo)
-	} else {
-		jsoninfo := database.Unjar("siteinfo")
-		err := json.Unmarshal(jsoninfo, &info)
-		if err != nil {
-			panic(err.Error())
-		}
-	}
-
 	// Check if we need to initialize the list of tulpas
 	// or get it if it already exists
 	if !database.Exists("tulpalist") {
@@ -102,7 +82,7 @@ func setNewTulpa(tulpa Tulpa) error {
 	database.Jar("tulpa."+tulpa.Host+"."+tulpa.Name, jsonTulpa)
 
 	// Put tulpa into tulpalist
-	tulpas = append(tulpas, tulpa.Name)
+	tulpas = append(tulpas, tulpa.Host+"."+tulpa.Name)
 	jsontulpa, err := json.Marshal(tulpas)
 	if err != nil {
 		return err

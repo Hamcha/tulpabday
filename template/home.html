@@ -12,10 +12,10 @@
 <body>
 	<header>Tulpa birthday and age</header>
 	<div id="container">
-	<h2>Imminent birthdays</h2>
+	<!--<h2>Imminent birthdays</h2>
 	<ul id="imminent">
 
-	</ul>
+	</ul>-->
 
 	Not in list? <a href="#" id="addTulpaLink">Add your tulpa</a>
 	<div id="addTulpaPrompt" class="hidebar" style="display: none;">
@@ -28,10 +28,22 @@
 	</div>
 
 	<h2>All tulpas</h2>
-
+	{{#Tulpas}}
+	<div class="tulpa">
+	<table><tr><td>
+	<div class="name">{{{Name}}}</div>
+	<div class="host">{{{Host}}}</div>
+	</td><td>
+	<div class="date">{{{Born}}}</div>
+	<div class="age">{{{Born}}}</div></td></tr>
+	<tr><td colspan="2">
+	<div class="until">{{{Born}}}</div>
+	</td></tr></table>
+	</div>
+	{{/Tulpas}}
 	</div>
 	<footer>
-		<p>Currently tracking {{#Info}}{{{TulpaCount}}}{{/Info}} tulpas from {{#Info}}{{{HostCount}}}{{/Info}} hosts - <a href="https://github.com/Hamcha/tulpabday">Source code is on Github!</a></p>
+		<p>Currently tracking {{{TulpaCount}}} tulpas from {{{HostCount}}} hosts - <a href="https://github.com/Hamcha/tulpabday">Source code is on Github!</a></p>
 	</footer>
 </body>
 </html>

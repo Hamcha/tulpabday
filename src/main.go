@@ -9,7 +9,6 @@ import (
 )
 
 var database goleg.Database
-var info SiteInfo
 var tulpas []string
 
 func main() {
