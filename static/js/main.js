@@ -38,7 +38,7 @@ $(document).ready(function(){
 			$("#addTulpaPrompt").html("Something went wrong, if it persists, contact <a href=\"https://twitter.com/hamcha\">@hamcha</a>.<br />The error was: "+xhr.responseText);
 		});
 	});
-	var months = ["Jan", "Feb", "Mar", "Apr", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+	var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 	var suf = function(a) { return (a === 1 ? "st" : a === 2 ? "nd" : a === 3 ? "rd" : "th"); };
 	var last = function(a) { return a[a.length - 1]; };
 	$(".date").each(function(index,item){
