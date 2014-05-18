@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 )
 
 func getInfo() {
@@ -54,15 +55,15 @@ func getTulpa(hname string, tname string) (Tulpa, error) {
 	return out, err
 }
 
-func getTulpasByHost(hname string) (Tulpa[], error) {
+func getTulpasByHost(hname string) ([]Tulpa, error) {
 	// Check if the host exists
-	if !database.Exists("host."+hname) {
-		return nil, new Error("Host not found")
+	if !database.Exists("host." + hname) {
+		return nil, errors.New("Host not found")
 	}
 
 	// Retrieve tulpa list (names)
 	var hostval []string
-	hostdata := database.Unjar("host."+hname)
+	hostdata := database.Unjar("host." + hname)
 	err := json.Unmarshal(hostdata, &hostval)
 	if err != nil {
 		return nil, err
@@ -77,5 +78,5 @@ func getTulpasByHost(hname string) (Tulpa[], error) {
 		}
 	}
 
-	return tulpas
+	return tulpas, nil
 }
