@@ -28,8 +28,6 @@ func main() {
 	// GET - Full webpages / UI
 	g := r.Methods("GET").Subrouter()
 	g.HandleFunc("/", HomeHandler)
-	g.HandleFunc("/new", NewTulpaHandler)
-	g.HandleFunc("/edit", EditTulpaHandler)
 	// POST - Actions
 	p := r.Methods("POST").Subrouter()
 	p.HandleFunc("/add", AddTulpa)

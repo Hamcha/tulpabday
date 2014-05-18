@@ -12,14 +12,6 @@ func HomeHandler(rw http.ResponseWriter, req *http.Request) {
 	}{
 		info,
 	}
-	rendered := mustache.RenderFileInLayout("template/home.html", "template/layout.html", data)
+	rendered := mustache.RenderFile("template/home.html", data)
 	fmt.Fprintf(rw, rendered)
-}
-
-func NewTulpaHandler(rw http.ResponseWriter, req *http.Request) {
-
-}
-
-func EditTulpaHandler(rw http.ResponseWriter, req *http.Request) {
-
 }

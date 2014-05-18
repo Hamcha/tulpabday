@@ -1,6 +1,25 @@
-Not in list?<br />
-<a href="/new">Add your tulpa</a>
+<!doctype html>
+<html>
+<head>
+	<title>Tulpa birthdays and age</title>
+	<link href="/static/css/screen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+	<header>Tulpa birthday and age</header>
+	<div id="container">
+	<h2>Imminent birthdays</h2>
+	<ul id="imminent">
 
-<h2>Imminent birthdays</h2>
+	</ul>
 
-<h2>All tulpas</h2>
+	Not in list? <a href="#">Add your tulpa</a>
+
+	<h2>All tulpas</h2>
+
+	<script src="/static/js/main.js"></script>
+	</div>
+	<footer>
+		<p>Currently tracking {{#Info}}{{{TulpaCount}}}{{/Info}} tulpas from {{#Info}}{{{HostCount}}}{{/Info}} hosts - <a href="https://github.com/Hamcha/tulpabday">Source code is on Github!</a></p>
+	</footer>
+</body>
+</html>

@@ -4,6 +4,10 @@ body {
 	font-family: 'Source Sans Pro', sans-serif;
 }
 
+h1,h2,h3,h4 { margin: 5px 0; padding: 0; }
+
+#container { margin: auto; width: 100%; max-width: 900px; padding: 10px;}
+
 a, a:visited { color: #37f; }
 
 header { text-align: center; font-size: 2em; font-weight: 300; }
