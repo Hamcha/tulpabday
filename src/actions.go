@@ -47,7 +47,61 @@ func AddTulpa(rw http.ResponseWriter, req *http.Request) {
 }
 
 func EditTulpa(rw http.ResponseWriter, req *http.Request) {
-	http.Error(rw, "Not implemented", 501)
+	// Parse form data
+	err := req.ParseForm()
+	if err != nil {
+		http.Error(rw, "Can't parse form data", 400)
+		return
+	}
+
+	// Check that all required fields are filled
+	vals := []string{"name", "host", "date", "secret", "oldname", "oldhost"}
+	for _, x := range vals {
+		if len(req.Form.Get(x)) == 0 {
+			http.Error(rw, "Required fields are missing", 400)
+			return
+		}
+	}
+
+	host := req.Form["host"][0]
+	name := req.Form["name"][0]
+	born := req.Form["date"][0]
+	secret := req.Form["secret"][0]
+	oldname := req.Form["oldname"][0]
+	oldhost := req.Form["oldhost"][0]
+
+	// Check if provided tulpa exists
+	if !hasTulpa(oldhost, oldname) {
+		http.Error(rw, "Trying to edit an inexistant tulpa", 404)
+		return
+	}
+
+	// Check secret code
+	tulpa, err := getTulpa(oldhost, oldname)
+	if err != nil {
+		http.Error(rw, "Database error", 500)
+	}
+	if tulpa.Secret != secret {
+		http.Error(rw, "Wrong secret code", 403)
+		return
+	}
+
+	// Set new tulpa data
+	tulpa.Name = name
+	tulpa.Host = host
+	tulpa.Born = born
+
+	// Take old tulpa out of the database
+	err = removeTulpa(oldhost, oldname)
+	// Put new tulpa record into database
+	err = setTulpa(tulpa)
+
+	if err != nil {
+		http.Error(rw, "Database error", 500)
+		return
+	}
+
+	fmt.Fprintf(rw, "Ok")
 }
 
 func DeleteTulpa(rw http.ResponseWriter, req *http.Request) {

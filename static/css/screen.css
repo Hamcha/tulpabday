@@ -75,6 +75,9 @@ ul#bday .tulpali .age { color: #c07;}
 	border-radius: 2px; border: 1px solid #aaa;
 	text-align: center;
 }
+.prompt input.short {
+	width: 100px;
+}
 
 button { cursor: pointer; }
 input.red { border: 1px solid #a37; }

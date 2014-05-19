@@ -13,7 +13,6 @@ $(document).ready(function(){
 
 	// Add tulpa via XHR
 	$("#addTulpaBtn").click(function(e){
-		var empty = function (a) { return a.value.replace(/\./ig,"").length === 0; };
 		var form = addform;
 		// Get field list
 		var fields = [form.name, form.host, form.date, form.secret];
@@ -98,6 +97,7 @@ $(document).ready(function(){
 var tulpas = {};
 
 // Util snippets
+var empty = function (a) { return a.value.replace(/\./ig,"").length === 0; };
 var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 var suf = function(a) { return (a === "1" ? "st" : a === "2" ? "nd" : a === "3" ? "rd" : "th"); };
 var last = function(a) { return a[a.length - 1]; };
@@ -122,7 +122,18 @@ var render = function(obj) {
 };
 
 var editprompt = function (id) {
-
+	var element = $("#"+id);
+	element.addClass("prompt");
+	var obj = tulpas[id];
+	var prompt = "<form id=\"EDIT_"+id+"\" onsubmit=\"return false;\">"+
+		"<input type=\"text\" class=\"short\" name=\"name\"\" placeholder=\"Tulpa's name\" value=\""+obj.Name+"\">&nbsp;"+
+		"<input type=\"text\" class=\"short\" name=\"host\"\" placeholder=\"Host's name\" value=\""+obj.Host+"\"><br />"+
+		"<input type=\"text\" class=\"short\" id=\"datepicker_"+id+"\" name=\"date\"\" placeholder=\"Birth Date\" value=\""+parseDate(obj.Born)+"\">&nbsp;"+
+		"<input type=\"password\" class=\"short\" name=\"secret\"\" placeholder=\"Secret code\"><br /><small>The secret code must be the same</small><br />"+
+		"<button onclick=\"tryEdit('"+id+"','EDIT_"+id+"')\">Edit</button><button onclick=\"restore('"+id+"')\">Nevermind</button></form>";
+	$("#"+id).html(prompt);
+	console.log($("#datepicker_"+id));
+	$("#datepicker_"+id).jdPicker();
 };
 
 var deleteprompt = function (id) {
@@ -149,6 +160,41 @@ var tryDelete = function (id,codeid) {
 	}).fail(function (xhr){
 		$("#"+id).html("<b>Failed</b> : "+xhr.responseText + "<br /><button onclick=\"restore('"+id+"')\">Nevermind</button>");
 	});
+};
+
+var tryEdit = function (id,codeid) {
+	var form = document.getElementById(codeid);
+	// Get field list
+	var fields = [form.name, form.host, form.date, form.secret];
+	// Clear previous red borders
+	for (var i = 0; i < fields.length; i++)
+		fields[i].className = fields[i].className.replace(" red","");
+	// Check for empty fields
+	fields = fields.filter(empty);
+	if (fields.length > 0) {
+		for (i = 0; i < fields.length; i++)
+			fields[i].className += " red";
+		return;
+	}
+	obj = tulpas[id];
+	// Send XHR (and hope for the best)
+	$.post("/edit",{
+			oldname: obj.Name,
+			oldhost: obj.Host,
+			name: form.name.value.replace(/\./ig,""),
+			host: form.host.value.replace(/\./ig,""),
+			date: Date.parse(form.date.value)/1000|0,
+			secret: sha256_digest(form.secret.value)
+	}).done(function (data){
+		location.reload();
+	}).fail(function (xhr){
+		$("#"+id).html("<b>Failed</b> : "+xhr.responseText + "<br /><button onclick=\"restore('"+id+"')\">Nevermind</button>");
+	});
+};
+
+var parseDate = function (date) {
+	var d = new Date(date*1000);
+	return [d.getFullYear(),d.getMonth()+1,d.getDate()].join("/");
 };
 
 var tbsort = function (a,b) {
