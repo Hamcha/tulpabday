@@ -4,7 +4,7 @@ tulpaweb:
 	go build -o tulpaweb ./src
 
 dep:
-	go get github.com/hamcha/goleg
+	go get github.com/cloudflare/gokabinet/kc
 	go get github.com/gorilla/mux
 	go get github.com/hoisie/mustache
 	touch dep

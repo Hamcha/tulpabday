@@ -35,7 +35,9 @@ func AddTulpa(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	err = setNewTulpa(tulpa)
+	// Put tulpa record into database
+	err = setTulpa(tulpa)
+
 	if err != nil {
 		http.Error(rw, "DATABASE ERROR", 500)
 		return

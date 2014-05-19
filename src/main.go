@@ -3,25 +3,27 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/cloudflare/gokabinet/kc"
 	"github.com/gorilla/mux"
-	"github.com/hamcha/goleg"
 	"net/http"
 )
 
-var database goleg.Database
-var tulpas []string
+var database *kc.DB
 
 func main() {
 	// Get command-line flags
 	listen := flag.String("bind", "127.0.0.1:9901", "Address:Port or Socket where to listen to")
-	dbdir := flag.String("data", "data", "Directory where to store data")
+	dbdir := flag.String("data", "data.kch", "Directory where to store data")
 	flag.Parse()
 
 	// Open database
-	database = goleg.Open(*dbdir, "tulpa", goleg.F_APPENDONLY|goleg.F_LZ4|goleg.F_SPLAYTREE)
-	defer database.CloseSave()
+	var err error
+	database, err = kc.Open(*dbdir, kc.WRITE)
 
-	getInfo()
+	if err != nil {
+		panic(err.Error())
+	}
+	defer database.Close()
 
 	r := mux.NewRouter()
 	// GET - Full webpages / UI
