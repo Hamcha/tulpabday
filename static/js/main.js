@@ -76,8 +76,8 @@ function age(bday, offset) {
 	else
 		days = Math.floor(difference / (1000*60*60*24));
 	var strout = "";
-	if (years == 1) strout += years + " year, <br/>";
-	else if (years > 0) strout += years + " years, ";
+	if (years == 1) strout += years + " year, <br />";
+	else if (years > 0) strout += years + " years, <br />";
 	if (months == 1) strout += months + " month, ";
 	else if (months > 0) strout += months + " months, ";
 	if (days == 1) strout += days + " day";

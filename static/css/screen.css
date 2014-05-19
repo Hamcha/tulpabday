@@ -32,7 +32,7 @@ input.red { border: 1px solid #a37; }
 
 .tulpa {
 	border: 1px solid #ccc; border-radius: 5px;
-	display: inline-block; padding: 8px; position: relative;
+	display: inline-table; padding: 8px; position: relative;
 	text-align: center; margin: 2px;
 }
 
