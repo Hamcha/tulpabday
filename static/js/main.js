@@ -43,11 +43,6 @@ $(document).ready(function(){
 		});
 	});
 
-	// Util snippets
-	var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-	var suf = function(a) { return (a === "1" ? "st" : a === "2" ? "nd" : a === "3" ? "rd" : "th"); };
-	var last = function(a) { return a[a.length - 1]; };
-
 	// Generate tulpa list
 	var out = "";
 	var imminent = false;
@@ -59,22 +54,9 @@ $(document).ready(function(){
 	for (i = 0; i < data.length; i++) {
 		var obj  = data[i];
 		var date = new Date(obj.Born * 1000);
-		var born = "Born <span>" + months[date.getMonth()] + " " + date.getDate() + suf(last(date.getDate().toString())) + ", " + date.getFullYear() + "</span>";
-		var tage = "Age <span>"+age(date,false)+"</span>";
-		var next = "Next birthday in "+age(date,true);
 		var id   = (obj.Name+"_"+obj.Host).replace(" ", "_");
-		out +=  "<div class=\"tulpa\" id=\""+id+"\">"+
-				"<table width=\"100%\"><tr><td>"+
-				"<div class=\"name\">"+obj.Name+"</div>"+
-				"<div class=\"host\">"+obj.Host+"</div>"+
-				"</td><td style=\"width: 140px;\">"+
-				"<div class=\"time\" style=\"display:none;\">"+obj.Born+"</div>"+
-				"<div class=\"date\">"+born+"</div>"+
-				"<div class=\"age\">"+tage+"</div></td></tr>"+
-				"<tr><td colspan=\"2\" style=\"text-align: center;\">"+
-				"<div class=\"until\">"+next+"</div>"+
-				"<div class=\"edit\" onclick=\"editprompt('"+id+"')\">&nbsp</div><div class=\"delete\" onclick=\"deleteprompt('"+id+"')\">&nbsp</div>"+
-				"</td></tr></table></div>";
+		tulpas[id] = obj;
+		out += "<div class=\"tulpa\" id=\""+id+"\">"+render(obj)+"</div>";
 		// Check for imminent birthday (under 30 days)
 		var nextdate = new Date(date);
 		nextdate.setYear(now.getFullYear());
@@ -113,18 +95,60 @@ $(document).ready(function(){
 	$(".tulpa").sortElements(tbsort);
 });
 
+var tulpas = {};
+
+// Util snippets
+var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+var suf = function(a) { return (a === "1" ? "st" : a === "2" ? "nd" : a === "3" ? "rd" : "th"); };
+var last = function(a) { return a[a.length - 1]; };
+
+var render = function(obj) {
+	var date = new Date(obj.Born * 1000);
+	var born = "Born <span>" + months[date.getMonth()] + " " + date.getDate() + suf(last(date.getDate().toString())) + ", " + date.getFullYear() + "</span>";
+	var tage = "Age <span>"+age(date,false)+"</span>";
+	var next = "Next birthday in "+age(date,true);
+	var id   = (obj.Name+"_"+obj.Host).replace(" ", "_");
+	return "<table width=\"100%\"><tr><td>"+
+			"<div class=\"name\">"+obj.Name+"</div>"+
+			"<div class=\"host\">"+obj.Host+"</div>"+
+			"</td><td style=\"width: 140px;\">"+
+			"<div class=\"time\" style=\"display:none;\">"+obj.Born+"</div>"+
+			"<div class=\"date\">"+born+"</div>"+
+			"<div class=\"age\">"+tage+"</div></td></tr>"+
+			"<tr><td colspan=\"2\" style=\"text-align: center;\">"+
+			"<div class=\"until\">"+next+"</div>"+
+			"<div class=\"edit\" onclick=\"editprompt('"+id+"')\">&nbsp</div><div class=\"delete\" onclick=\"deleteprompt('"+id+"')\">&nbsp</div>"+
+			"</td></tr></table>";
+};
+
 var editprompt = function (id) {
 
 };
 
 var deleteprompt = function (id) {
 	var element = $("#"+id);
-	console.log(element);
 	element.addClass("prompt");
 	var prompt = "Write the secret code to <br /><b style=\"color: #c07;\">delete</b> your tulpa<br />"+
-		"<input type=\"password\" name=\"secret\"><br />"+
-		"<button>Delete</button><button>Nevermind</button>";
+		"<input type=\"password\" id=\"DELETE_"+id+"\"><br />"+
+		"<button onclick=\"tryDelete('"+id+"','DELETE_"+id+"')\">Delete</button><button onclick=\"restore('"+id+"')\">Nevermind</button>";
 	$("#"+id).html(prompt);
+};
+
+var restore = function (id) {
+	$("#"+id).removeClass("prompt").html(render(tulpas[id]));
+};
+
+var tryDelete = function (id,codeid) {
+	var code = $("#"+codeid).val();
+	if (code.length < 1) return $("#"+codeid).addClass("red");
+	codesha = sha256_digest(code);
+	obj = tulpas[id];
+	$.post("/delete",{ name: obj.Name, host: obj.Host, secret: codesha
+	}).done(function (data){
+		location.reload();
+	}).fail(function (xhr){
+		$("#"+id).html("<b>Failed</b> : "+xhr.responseText + "<br /><button onclick=\"restore('"+id+"')\">Nevermind</button>");
+	});
 };
 
 var tbsort = function (a,b) {

@@ -55,3 +55,7 @@ func getAllTulpas() ([]Tulpa, error) {
 	}
 	return tulpas, nil
 }
+
+func removeTulpa(hname string, tname string) error {
+	return database.Remove("tulpa." + hname + "." + tname)
+}

@@ -28,13 +28,11 @@ footer { text-align: center; font-size: 0.9em; }
 }
 
 .hidebar button { padding: 3px 10px; }
-.hidebar input.red { border: 1px solid #a37; }
-
 
 .tulpa {
 	border: 1px solid #ccc; border-radius: 5px; vertical-align: top;
 	display: inline-block; padding: 8px; position: relative;
-	text-align: center; margin: 2px; min-width: 270px; height: 103px;
+	text-align: center; margin: 2px; min-width: 270px;
 }
 
 .tulpa .name  { font-size: 1.8em; text-align: center; }
@@ -79,3 +77,4 @@ ul#bday .tulpali .age { color: #c07;}
 }
 
 button { cursor: pointer; }
+input.red { border: 1px solid #a37; }
