@@ -38,9 +38,13 @@ $(document).ready(function(){
 			$("#addTulpaPrompt").html("Something went wrong, if it persists, contact <a href=\"https://twitter.com/hamcha\">@hamcha</a>.<br />The error was: "+xhr.responseText);
 		});
 	});
+	// Order tulpas by bday
+	$(".tulpa").sortElements(tbsort);
+	// Util snippets
 	var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 	var suf = function(a) { return (a === "1" ? "st" : a === "2" ? "nd" : a === "3" ? "rd" : "th"); };
 	var last = function(a) { return a[a.length - 1]; };
+	// Translate dates into their fields
 	$(".date").each(function(index,item){
 		var date = new Date(item.innerHTML * 1000);
 		item.innerHTML = "Born <span>" + months[date.getMonth()] + " " + date.getDate() + suf(last(date.getDate().toString())) + ", " + date.getFullYear() + "</span>";
@@ -54,6 +58,18 @@ $(document).ready(function(){
 		item.innerHTML = "Next birthday in "+age(date,true);
 	});
 });
+
+function tbsort(a,b) {
+	var dateA = new Date($(a).find(".date")[0].innerHTML * 1000);
+	var dateB = new Date($(b).find(".date")[0].innerHTML * 1000);
+	var tod = new Date();
+	tod.setYear(tod.getFullYear()+1);
+	ad = tod-dateA; bd = tod-dateB;
+	ay = Math.ceil(ad / (1000*60*60*24*365));
+	by = Math.ceil(bd / (1000*60*60*24*365));
+	ad -= ay*1000*60*60*24*365; bd -= by*1000*60*60*24*365;
+	return bd - ad;
+}
 
 function age(bday, offset) {
 	var newDate = bday;
