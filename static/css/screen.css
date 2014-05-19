@@ -20,21 +20,21 @@ footer { text-align: center; font-size: 0.9em; }
 
 .dot { font-size: 0.8em; border-bottom: 1px dotted #333; }
 
-input, button {
+.hidebar input, .hidebar button {
 	border: 1px solid #ccc;
 	padding: 3px; font-size: 1.2em; font-weight: 300;
 	font-family: 'Source Sans Pro', sans-serif;
 	border-radius: 3px;
 }
 
-button { padding: 3px 10px; }
-input.red { border: 1px solid #a37; }
+.hidebar button { padding: 3px 10px; }
+.hidebar input.red { border: 1px solid #a37; }
 
 
 .tulpa {
-	border: 1px solid #ccc; border-radius: 5px;
-	display: inline-table; padding: 8px; position: relative;
-	text-align: center; margin: 2px; min-width: 270px;
+	border: 1px solid #ccc; border-radius: 5px; vertical-align: top;
+	display: inline-block; padding: 8px; position: relative;
+	text-align: center; margin: 2px; min-width: 270px; height: 103px;
 }
 
 .tulpa .name  { font-size: 1.8em; text-align: center; }
@@ -44,6 +44,16 @@ input.red { border: 1px solid #a37; }
 .tulpa .until { font-size: 0.9em; padding-left: 10px; padding-top: 3px; }
 .tulpa .date span { color: #c2a; }
 .tulpa .age  span { color: #2a8; }
+.tulpa .edit {
+	position: absolute; bottom: 2px; right: 13px;
+	font-size: 10px; background-color: #03c; border-radius: 10px;
+	width: 10px; height: 10px; cursor: pointer;
+}
+.tulpa .delete {
+	position: absolute; bottom: 2px; right: 2px;
+	font-size: 10px; background-color: #c07; border-radius: 10px;
+	width: 10px; height: 10px; cursor: pointer;
+}
 
 ul#imminent, ul#bday { padding: 0; }
 ul#bday .tulpali { font-size: 1.2em; font-weight: 300; }
@@ -57,3 +67,15 @@ ul#bday .tulpali { font-size: 1.2em; font-weight: 300; }
 .tulpali .date { font-size: 1.1em; font-weight: 300; }
 
 ul#bday .tulpali .age { color: #c07;}
+
+.prompt {
+	background-color: #eee; box-shadow: inset 0 0 0 2px #fff;
+	font-size: 0.9em; text-align: center;
+	font-family: 'Source Sans Pro', sans-serif; font-weight: 300;
+}
+.prompt input, .prompt button {
+	border-radius: 2px; border: 1px solid #aaa;
+	text-align: center;
+}
+
+button { cursor: pointer; }

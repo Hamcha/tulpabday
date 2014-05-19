@@ -62,7 +62,8 @@ $(document).ready(function(){
 		var born = "Born <span>" + months[date.getMonth()] + " " + date.getDate() + suf(last(date.getDate().toString())) + ", " + date.getFullYear() + "</span>";
 		var tage = "Age <span>"+age(date,false)+"</span>";
 		var next = "Next birthday in "+age(date,true);
-		out +=  "<div class=\"tulpa\">"+
+		var id   = (obj.Name+"_"+obj.Host).replace(" ", "_");
+		out +=  "<div class=\"tulpa\" id=\""+id+"\">"+
 				"<table width=\"100%\"><tr><td>"+
 				"<div class=\"name\">"+obj.Name+"</div>"+
 				"<div class=\"host\">"+obj.Host+"</div>"+
@@ -72,6 +73,7 @@ $(document).ready(function(){
 				"<div class=\"age\">"+tage+"</div></td></tr>"+
 				"<tr><td colspan=\"2\" style=\"text-align: center;\">"+
 				"<div class=\"until\">"+next+"</div>"+
+				"<div class=\"edit\" onclick=\"editprompt('"+id+"')\">&nbsp</div><div class=\"delete\" onclick=\"deleteprompt('"+id+"')\">&nbsp</div>"+
 				"</td></tr></table></div>";
 		// Check for imminent birthday (under 30 days)
 		var nextdate = new Date(date);
@@ -111,7 +113,21 @@ $(document).ready(function(){
 	$(".tulpa").sortElements(tbsort);
 });
 
-function tbsort(a,b) {
+var editprompt = function (id) {
+
+};
+
+var deleteprompt = function (id) {
+	var element = $("#"+id);
+	console.log(element);
+	element.addClass("prompt");
+	var prompt = "Write the secret code to <br /><b style=\"color: #c07;\">delete</b> your tulpa<br />"+
+		"<input type=\"password\" name=\"secret\"><br />"+
+		"<button>Delete</button><button>Nevermind</button>";
+	$("#"+id).html(prompt);
+};
+
+var tbsort = function (a,b) {
 	var dateA = new Date($(a).find(".time")[0].innerHTML * 1000);
 	var dateB = new Date($(b).find(".time")[0].innerHTML * 1000);
 	var tod = new Date();
@@ -121,9 +137,9 @@ function tbsort(a,b) {
 	by = Math.ceil(bd / (1000*60*60*24*365));
 	ad -= ay*1000*60*60*24*365; bd -= by*1000*60*60*24*365;
 	return bd - ad;
-}
+};
 
-function age(bday, offset) {
+var age = function (bday, offset) {
 	var newDate = bday;
 	var today = new Date();
 	var difference;
@@ -151,4 +167,4 @@ function age(bday, offset) {
 	if (days == 1) strout += days + " day";
 	else strout += days + " days";
 	return strout;
-}
+};
