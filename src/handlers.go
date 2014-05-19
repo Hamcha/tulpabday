@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/hoisie/mustache"
 	"net/http"
@@ -22,16 +23,26 @@ func HomeHandler(rw http.ResponseWriter, req *http.Request) {
 			hosts[tulpas[i].Host] = true
 			hostcount += 1
 		}
+		// Strip secret keys
+		tulpas[i].Secret = ""
 	}
+
 	// Get total tulpas count
 	tulpacount := len(tulpas)
 
+	// Put tulpas into JSON format
+	jsondata, err := json.Marshal(tulpas)
+	if err != nil {
+		http.Error(rw, "Encoding error", 500)
+		return
+	}
+
 	data := struct {
-		Tulpas     []Tulpa
+		Tulpas     string
 		TulpaCount int
 		HostCount  int
 	}{
-		tulpas,
+		string(jsondata),
 		tulpacount,
 		hostcount,
 	}

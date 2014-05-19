@@ -38,30 +38,38 @@ $(document).ready(function(){
 			$("#addTulpaPrompt").html("Something went wrong, if it persists, contact <a href=\"https://twitter.com/hamcha\">@hamcha</a>.<br />The error was: "+xhr.responseText);
 		});
 	});
-	// Order tulpas by bday
-	$(".tulpa").sortElements(tbsort);
 	// Util snippets
 	var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 	var suf = function(a) { return (a === "1" ? "st" : a === "2" ? "nd" : a === "3" ? "rd" : "th"); };
 	var last = function(a) { return a[a.length - 1]; };
-	// Translate dates into their fields
-	$(".date").each(function(index,item){
-		var date = new Date(item.innerHTML * 1000);
-		item.innerHTML = "Born <span>" + months[date.getMonth()] + " " + date.getDate() + suf(last(date.getDate().toString())) + ", " + date.getFullYear() + "</span>";
-	});
-	$(".age").each(function(index,item){
-		var date = new Date(item.innerHTML * 1000);
-		item.innerHTML = "Age <span>"+age(date,false)+"</span>";
-	});
-	$(".until").each(function(index,item){
-		var date = new Date(item.innerHTML * 1000);
-		item.innerHTML = "Next birthday in "+age(date,true);
-	});
+	var out = "";
+	for (var i = 0; i < data.length; i++) {
+		var obj  = data[i];
+		var date = new Date(obj.Born * 1000);
+		var born = "Born <span>" + months[date.getMonth()] + " " + date.getDate() + suf(last(date.getDate().toString())) + ", " + date.getFullYear() + "</span>";
+		var tage = "Age <span>"+age(date,false)+"</span>";
+		var next = "Next birthday in "+age(date,true);
+		out += "<div class=\"tulpa\">"+
+	"<table width=\"100%\"><tr><td>"+
+	"<div class=\"name\">"+obj.Name+"</div>"+
+	"<div class=\"host\">"+obj.Host+"</div>"+
+	"</td><td style=\"width: 140px;\">"+
+	"<div class=\"time\" style=\"display:none;\">"+obj.Born+"</div>"+
+	"<div class=\"date\">"+born+"</div>"+
+	"<div class=\"age\">"+tage+"</div></td></tr>"+
+	"<tr><td colspan=\"2\" style=\"text-align: center;\">"+
+	"<div class=\"until\">"+next+"</div>"+
+	"</td></tr></table>"+
+	"</div>";
+	}
+	$("#tulpas").html(out);
+	// Order tulpas by bday
+	$(".tulpa").sortElements(tbsort);
 });
 
 function tbsort(a,b) {
-	var dateA = new Date($(a).find(".date")[0].innerHTML * 1000);
-	var dateB = new Date($(b).find(".date")[0].innerHTML * 1000);
+	var dateA = new Date($(a).find(".time")[0].innerHTML * 1000);
+	var dateB = new Date($(b).find(".time")[0].innerHTML * 1000);
 	var tod = new Date();
 	tod.setYear(tod.getFullYear()+1);
 	ad = tod-dateA; bd = tod-dateB;
