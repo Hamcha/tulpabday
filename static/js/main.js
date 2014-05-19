@@ -1,4 +1,5 @@
 $(document).ready(function(){
+	// Put localStorage data if saved
 	var addform = document.getElementById("addTulpaForm");
 	if (typeof localStorage.host !== "undefined")
 		addform.host.value = localStorage.host;
@@ -9,6 +10,7 @@ $(document).ready(function(){
 	$("#addTulpaLink").click(function(e){
 		$("#addTulpaPrompt").slideToggle();
 	});
+
 	// Add tulpa via XHR
 	$("#addTulpaBtn").click(function(e){
 		var empty = function (a) { return a.value.replace(/\./ig,"").length === 0; };
@@ -31,38 +33,80 @@ $(document).ready(function(){
 			date: Date.parse(form.date.value)/1000|0,
 			secret: sha256_digest(form.secret.value)
 		}).done(function(data){
+			// Save to localStorage
 			localStorage.host = form.host.value;
 			localStorage.secret = form.secret.value;
+			// Reload page
 			location.reload();
 		}).fail(function(xhr){
 			$("#addTulpaPrompt").html("Something went wrong, if it persists, contact <a href=\"https://twitter.com/hamcha\">@hamcha</a>.<br />The error was: "+xhr.responseText);
 		});
 	});
+
 	// Util snippets
 	var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 	var suf = function(a) { return (a === "1" ? "st" : a === "2" ? "nd" : a === "3" ? "rd" : "th"); };
 	var last = function(a) { return a[a.length - 1]; };
+
+	// Generate tulpa list
 	var out = "";
-	for (var i = 0; i < data.length; i++) {
+	var imminent = false;
+	var immiout = "";
+	var bday = false;
+	var bout = "";
+	var i = 0;
+	var now = new Date();
+	for (i = 0; i < data.length; i++) {
 		var obj  = data[i];
 		var date = new Date(obj.Born * 1000);
 		var born = "Born <span>" + months[date.getMonth()] + " " + date.getDate() + suf(last(date.getDate().toString())) + ", " + date.getFullYear() + "</span>";
 		var tage = "Age <span>"+age(date,false)+"</span>";
 		var next = "Next birthday in "+age(date,true);
-		out += "<div class=\"tulpa\">"+
-	"<table width=\"100%\"><tr><td>"+
-	"<div class=\"name\">"+obj.Name+"</div>"+
-	"<div class=\"host\">"+obj.Host+"</div>"+
-	"</td><td style=\"width: 140px;\">"+
-	"<div class=\"time\" style=\"display:none;\">"+obj.Born+"</div>"+
-	"<div class=\"date\">"+born+"</div>"+
-	"<div class=\"age\">"+tage+"</div></td></tr>"+
-	"<tr><td colspan=\"2\" style=\"text-align: center;\">"+
-	"<div class=\"until\">"+next+"</div>"+
-	"</td></tr></table>"+
-	"</div>";
+		out +=  "<div class=\"tulpa\">"+
+				"<table width=\"100%\"><tr><td>"+
+				"<div class=\"name\">"+obj.Name+"</div>"+
+				"<div class=\"host\">"+obj.Host+"</div>"+
+				"</td><td style=\"width: 140px;\">"+
+				"<div class=\"time\" style=\"display:none;\">"+obj.Born+"</div>"+
+				"<div class=\"date\">"+born+"</div>"+
+				"<div class=\"age\">"+tage+"</div></td></tr>"+
+				"<tr><td colspan=\"2\" style=\"text-align: center;\">"+
+				"<div class=\"until\">"+next+"</div>"+
+				"</td></tr></table></div>";
+		// Check for imminent birthday (under 30 days)
+		var nextdate = new Date(date);
+		nextdate.setYear(now.getFullYear());
+		var daysdiff = (nextdate - now)/1000/60/60/24;
+		var newage = 0;
+		if (daysdiff > 0) {
+			if (daysdiff < 30) {
+				imminent = true;
+				newage = Math.ceil((now-date) / (1000*60*60*24*365));
+				immiout += "<li class=\"tulpali\"><span class=\"name\">"+obj.Name+"</span> "+
+				"<span class=\"host\">"+obj.Host+"</span> will turn "+
+				"<span class=\"age\">"+newage+"</span> in "+
+				"<span class=\"date\">"+Math.ceil(daysdiff)+" days</span>"+
+				"</li>";
+			}
+		}
+		// Check for current birthdays
+		daysdiff = (nextdate - now)/1000/60/60/24+1;
+		if (daysdiff < 1 && daysdiff > 0) {
+			bday = true;
+			newage = Math.floor((now-date) / (1000*60*60*24*365));
+			bout += "<li class=\"tulpali\"><span class=\"name\">"+obj.Name+"</span> "+
+			"<span class=\"host\">"+obj.Host+"</span> has turned "+
+			"<span class=\"age\">"+newage+"</span> today!"+
+			"</li>";
+		}
 	}
+
 	$("#tulpas").html(out);
+	if (!imminent) $(".hideim").remove();
+	else $("#imminent").html(immiout);
+	if (!bday) $(".hidebday").remove();
+	else $("#bday").html(bout);
+
 	// Order tulpas by bday
 	$(".tulpa").sortElements(tbsort);
 });

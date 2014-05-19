@@ -30,6 +30,7 @@ input, button {
 button { padding: 3px 10px; }
 input.red { border: 1px solid #a37; }
 
+
 .tulpa {
 	border: 1px solid #ccc; border-radius: 5px;
 	display: inline-table; padding: 8px; position: relative;
@@ -43,3 +44,16 @@ input.red { border: 1px solid #a37; }
 .tulpa .until { font-size: 0.9em; padding-left: 10px; padding-top: 3px; }
 .tulpa .date span { color: #c2a; }
 .tulpa .age  span { color: #2a8; }
+
+ul#imminent, ul#bday { padding: 0; }
+ul#bday .tulpali { font-size: 1.2em; font-weight: 300; }
+.tulpali {
+	list-style-type: none; padding-bottom: 20px;
+	position: relative; border-bottom: 1px dotted #ccc;
+}
+.tulpali .name { font-size: 1.3em; font-weight: 300; }
+.tulpali .host { font-size: 0.8em; position: absolute; bottom: 5px; left: 0; }
+.tulpali .age  { font-size: 1.3em; font-weight: bold; color: #e60; }
+.tulpali .date { font-size: 1.1em; font-weight: 300; }
+
+ul#bday .tulpali .age { color: #c07;}
