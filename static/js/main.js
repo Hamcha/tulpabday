@@ -39,7 +39,7 @@ $(document).ready(function(){
 		});
 	});
 	var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-	var suf = function(a) { return (a === 1 ? "st" : a === 2 ? "nd" : a === 3 ? "rd" : "th"); };
+	var suf = function(a) { return (a === "1" ? "st" : a === "2" ? "nd" : a === "3" ? "rd" : "th"); };
 	var last = function(a) { return a[a.length - 1]; };
 	$(".date").each(function(index,item){
 		var date = new Date(item.innerHTML * 1000);
