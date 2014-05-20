@@ -104,7 +104,9 @@ var last = function(a) { return a[a.length - 1]; };
 
 var render = function(obj) {
 	var date = new Date(obj.Born * 1000);
-	var born = "Born <span>" + months[date.getMonth()] + " " + date.getDate() + suf(last(date.getDate().toString())) + ", " + date.getFullYear() + "</span>";
+	var suffix = "th";
+	if (date.getDate() != 11) suffix = suf(last(date.getDate().toString()));
+	var born = "Born <span>" + months[date.getMonth()] + " " + date.getDate() + suffix + ", " + date.getFullYear() + "</span>";
 	var tage = "Age <span>"+age(date,false)+"</span>";
 	var next = "Next birthday in "+age(date,true);
 	var id   = (obj.Name+"_"+obj.Host).replace(" ", "_");
