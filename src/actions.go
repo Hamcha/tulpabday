@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/gorilla/mux"
 	"net/http"
 )
 
@@ -141,5 +142,59 @@ func DeleteTulpa(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	removeTulpa(host, name)
+	fmt.Fprintf(rw, "Ok")
+}
+
+func AdminDelete(rw http.ResponseWriter, req *http.Request) {
+	// Check for the direct IP
+	if len(req.RemoteAddr) < 9 || req.RemoteAddr[0:9] != "127.0.0.1" {
+		http.Error(rw, "Only the host machine can use admin commands", 403)
+		return
+	}
+	// Check for forwarded ip (if there is a reverse proxy)
+	if ipfwd, ok := req.Header["X-Forwarded-For"]; ok && ipfwd[0] != "127.0.0.1" {
+		http.Error(rw, "Only the host machine can use admin commands", 403)
+		return
+	}
+
+	vars := mux.Vars(req)
+
+	err := removeTulpa(vars["host"], vars["tulpa"])
+	if err != nil {
+		http.Error(rw, err.Error(), 500)
+		return
+	}
+
+	fmt.Fprintf(rw, "Ok")
+}
+
+func AdminChange(rw http.ResponseWriter, req *http.Request) {
+	// Check for the direct IP
+	if len(req.RemoteAddr) < 9 || req.RemoteAddr[0:9] != "127.0.0.1" {
+		http.Error(rw, "Only the host machine can use admin commands", 403)
+		return
+	}
+	// Check for forwarded ip (if there is a reverse proxy)
+	if val, ok := req.Header["X-Forwarded-For"]; ok && val[0] != "127.0.0.1" {
+		http.Error(rw, "Only the host machine can use admin commands", 403)
+		return
+	}
+
+	vars := mux.Vars(req)
+
+	tulpa, err := getTulpa(vars["host"], vars["tulpa"])
+	if err != nil {
+		http.Error(rw, err.Error(), 500)
+		return
+	}
+
+	tulpa.Secret = vars["key"]
+
+	err = setTulpa(tulpa)
+	if err != nil {
+		http.Error(rw, err.Error(), 500)
+		return
+	}
+
 	fmt.Fprintf(rw, "Ok")
 }

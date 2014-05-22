@@ -34,6 +34,9 @@ func main() {
 	p.HandleFunc("/add", AddTulpa)
 	p.HandleFunc("/edit", EditTulpa)
 	p.HandleFunc("/delete", DeleteTulpa)
+	// Admin reserved actions (restricted to localhost)
+	g.HandleFunc("/admin/delete/{host}/{tulpa}", AdminDelete)
+	g.HandleFunc("/admin/change/{host}/{tulpa}/{key}", AdminChange)
 
 	// Setup and run http server
 	http.Handle("/", r)
