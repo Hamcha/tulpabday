@@ -35,7 +35,7 @@ footer { text-align: center; font-size: 0.9em; }
 	text-align: center; margin: 2px; min-width: 270px;
 }
 
-.tulpa .name  { font-size: 1.8em; text-align: center;
+.tulpa .name  { font-size: 1.8em; text-align: center; line-height: 0.8em;
                 max-width: 120px; padding: 0.2em 0;   }
 .tulpa .host  { font-size: 0.9em; text-align: center; }
 .tulpa .date  { font-size: 0.9em; text-align: left; margin-left: 10px; }
