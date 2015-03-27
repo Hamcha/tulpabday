@@ -106,13 +106,19 @@ var tulpas = {};
 // Util snippets
 var empty = function (a) { return a.value.replace(/\./ig,"").length === 0; };
 var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-var suf = function(a) { return (a === "1" ? "st" : a === "2" ? "nd" : a === "3" ? "rd" : "th"); };
+var suf = function(a) {
+	switch (a) {
+		case "21": case "1": return "st";
+		case "22": case "2": return "nd";
+		case "23": case "3": return "rd";
+		default:             return "th";
+	}
+};
 var last = function(a) { return a[a.length - 1]; };
 
 var render = function(obj) {
 	var date = new Date(obj.Born * 1000);
-	var suffix = "th";
-	if (date.getDate() < 10 || date.getDate() > 30) suffix = suf(last(date.getDate().toString()));
+	var suffix = suf(date.getDate().toString());
 	var born = "Born <span>" + months[date.getMonth()] + " " + date.getDate() + suffix + ", " + date.getFullYear() + "</span>";
 	var tage = "Age <span>"+age(date,false)+"</span>";
 	var next = "Next birthday in "+age(date,true);
