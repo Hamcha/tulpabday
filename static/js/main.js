@@ -61,16 +61,14 @@ $(document).ready(function(){
 		nextdate.setYear(now.getFullYear());
 		var daysdiff = (nextdate - now)/1000/60/60/24;
 		var newage = 0;
-		if (daysdiff > 0) {
-			if (daysdiff < 30) {
-				imminent = true;
-				newage = Math.ceil((now-date) / (1000*60*60*24*365));
-				immiout += "<li class=\"tulpali\"><span class=\"name\">"+obj.Name+"</span> "+
-				"<span class=\"host\">"+obj.Host+"</span> will turn "+
-				"<span class=\"age\">"+newage+"</span> in "+
-				"<span class=\"date\">"+Math.ceil(daysdiff)+" days</span>"+
-				"</li>";
-			}
+		if (daysdiff > 0 && daysdiff < 30) {
+			imminent = true;
+			newage = Math.ceil((now-date) / (1000*60*60*24*365));
+			immiout += "<li class=\"tulpali\"><span class=\"name\">"+obj.Name+"</span> "+
+			"<span class=\"host\">"+obj.Host+"</span> will turn "+
+			"<span class=\"age\">"+newage+"</span> in "+
+			"<span class=\"date\">"+Math.ceil(daysdiff)+"</span> days"+
+			"</li>";
 		}
 		// Check for current birthdays
 		daysdiff = (nextdate - now)/1000/60/60/24+1;
@@ -85,10 +83,19 @@ $(document).ready(function(){
 	}
 
 	$("#tulpas").html(out);
-	if (!imminent) $(".hideim").remove();
-	else $("#imminent").html(immiout);
-	if (!bday) $(".hidebday").remove();
-	else $("#bday").html(bout);
+
+	if (!imminent) {
+		$(".hideim").remove();
+	} else {
+		$("#imminent").html(immiout);
+		$("#imminent .tulpali").sortElements(imsort);
+	}
+
+	if (!bday) {
+		$(".hidebday").remove();
+	} else {
+		$("#bday").html(bout);
+	}
 
 	// Order tulpas by bday
 	$(".tulpa").sortElements(tbsort);
@@ -209,6 +216,12 @@ var tbsort = function (a,b) {
 	by = Math.ceil(bd / (1000*60*60*24*365));
 	ad -= ay*1000*60*60*24*365; bd -= by*1000*60*60*24*365;
 	return bd - ad;
+};
+
+var imsort = function (a,b) {
+	var dayA = parseInt($(a).find(".date")[0].innerHTML);
+	var dayB = parseInt($(b).find(".date")[0].innerHTML);
+	return dayA - dayB;
 };
 
 var age = function (bday, offset) {
