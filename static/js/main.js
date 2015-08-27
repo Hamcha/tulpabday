@@ -53,7 +53,7 @@ $(document).ready(function(){
 	for (i = 0; i < data.length; i++) {
 		var obj  = data[i];
 		var date = new Date(obj.Born * 1000);
-		var id   = (obj.Name+"_"+obj.Host).replace(" ", "_");
+		var id   = escapeChars(obj.Name+"_"+obj.Host);
 		tulpas[id] = obj;
 		out += "<div class=\"tulpa\" id=\""+id+"\">"+render(obj)+"</div>";
 		// Check for imminent birthday (under 30 days)
@@ -116,13 +116,18 @@ var suf = function(a) {
 };
 var last = function(a) { return a[a.length - 1]; };
 
+var escapeChars = function(str) {
+	str = str.replace(/\s|\*|\,|\.|\(|\)|\[|\]|\{|\}/ig, "-");
+	return str;
+};
+
 var render = function(obj) {
 	var date = new Date(obj.Born * 1000);
 	var suffix = suf(date.getDate().toString());
 	var born = "Born <span>" + months[date.getMonth()] + " " + date.getDate() + suffix + ", " + date.getFullYear() + "</span>";
 	var tage = "Age <span>"+age(date,false)+"</span>";
 	var next = "Next birthday in "+age(date,true);
-	var id   = (obj.Name+"_"+obj.Host).replace(" ", "_");
+	var id   = escapeChars(obj.Name+"_"+obj.Host);
 	return "<table width=\"100%\"><tr><td>"+
 			"<div class=\"name\">"+obj.Name+"</div>"+
 			"<div class=\"host\">"+obj.Host+"</div>"+
@@ -138,7 +143,7 @@ var render = function(obj) {
 
 var pad = function (x,n) {
 	return ("0".repeat(n) + x.toString()).slice(-n);
-}
+};
 
 var showEditDate = function (unixtime) {
 	var date = new Date(unixtime*1000);
