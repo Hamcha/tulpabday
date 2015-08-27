@@ -117,7 +117,7 @@ var suf = function(a) {
 var last = function(a) { return a[a.length - 1]; };
 
 var escapeChars = function(str) {
-	str = str.replace(/\s|\*|\,|\.|\(|\)|\[|\]|\{|\}/ig, "-");
+	str = str.replace(/\s|\*|\,|\.|\(|\)|\[|\]|\{|\}|\'|\"|\`|\\/ig, "-");
 	return str;
 };
 
