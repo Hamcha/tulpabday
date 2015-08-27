@@ -136,6 +136,15 @@ var render = function(obj) {
 			"</td></tr></table>";
 };
 
+var pad = function (x,n) {
+	return ("0".repeat(n) + x.toString()).slice(-n);
+}
+
+var showEditDate = function (unixtime) {
+	var date = new Date(unixtime*1000);
+	return date.getUTCFullYear() + "-" + pad(date.getUTCMonth() + 1, 2) + "-" + pad(date.getUTCDate(), 2);
+};
+
 var editprompt = function (id) {
 	var element = $("#"+id);
 	element.addClass("prompt");
@@ -143,12 +152,10 @@ var editprompt = function (id) {
 	var prompt = "<form id=\"EDIT_"+id+"\" onsubmit=\"return false;\">"+
 		"<input type=\"text\" class=\"short\" name=\"name\"\" placeholder=\"Tulpa's name\" value=\""+obj.Name+"\">&nbsp;"+
 		"<input type=\"text\" class=\"short\" name=\"host\"\" placeholder=\"Host's name\" value=\""+obj.Host+"\"><br />"+
-		"<input type=\"text\" class=\"short\" id=\"datepicker_"+id+"\" name=\"date\"\" placeholder=\"Birth Date\" value=\""+parseDate(obj.Born)+"\">&nbsp;"+
-		"<input type=\"password\" class=\"short\" name=\"secret\"\" placeholder=\"Secret code\"><br /><small>The secret code must be the same</small><br />"+
+		"<input type=\"date\" class=\"short\" name=\"date\"\" placeholder=\"Birth Date\" value=\""+showEditDate(obj.Born)+"\">&nbsp;"+
+		"<input type=\"password\" class=\"short\" name=\"secret\"\" placeholder=\"Secret code\"><br />"+
 		"<button onclick=\"tryEdit('"+id+"','EDIT_"+id+"')\">Edit</button><button onclick=\"restore('"+id+"')\">Nevermind</button></form>";
 	$("#"+id).html(prompt);
-	console.log($("#datepicker_"+id));
-	$("#datepicker_"+id).jdPicker();
 };
 
 var deleteprompt = function (id) {
@@ -209,7 +216,7 @@ var tryEdit = function (id,codeid) {
 
 var parseDate = function (date) {
 	var d = new Date(date*1000);
-	return [d.getFullYear(),d.getMonth()+1,d.getDate()].join("/");
+	return [d.getUTCFullYear(),d.getUTCMonth()+1,d.getUTCDate()].join("/");
 };
 
 var tbsort = function (a,b) {
@@ -236,7 +243,7 @@ var age = function (bday, offset) {
 	var difference;
 	if (offset)
 	{
-		today.setYear(today.getFullYear()+1);
+		today.setYear(today.getUTCFullYear()+1);
 		difference = (newDate-today);
 	} else {
 		difference = (today-newDate);

@@ -3,9 +3,7 @@
 <head>
 	<title>Tulpa birthdays and age</title>
 	<link href="/static/css/screen.css" rel="stylesheet" type="text/css" />
-	<link href="/static/css/jdpicker.css" rel="stylesheet" type="text/css" />
 	<script src="/static/js/jquery.js"></script>
-	<script src="/static/js/jquery.jdpicker.js"></script>
 	<script src="/static/js/sha256.js"></script>
 	<script src="/static/js/main.js"></script>
 	<script>
@@ -18,11 +16,32 @@
 	Not in list? <a href="#" id="addTulpaLink">Add your tulpa</a><br />
 	<div id="addTulpaPrompt" class="hidebar" style="display: none;">
 		<form id="addTulpaForm" onsubmit="return false;">
-		<input type="text" name="name" placeholder="Tulpa's name" />&nbsp;
-		<input type="text" name="host" placeholder="Host's name" title="Please keep this identical to all your other tulpas. Everything allowed except for the '.' character" />&nbsp;
-		<input type="text" name="date" placeholder="Birth date" class="jdpicker" style="width: 100px;" />&nbsp;
-		<input type="password" name="secret" placeholder="Secret key" title="The secret key is used for editing or deleting the tulpa's data" /> <span class="dot" title="The secret key is used for editing or deleting the tulpa's data">(?)</span>
-		<button id="addTulpaBtn">Submit</button></form>
+		<table width="100%">
+		<tr>
+			<th>Tulpa name</th>
+			<th>Host name</th>
+			<th>Birth date</th>
+			<th>Secret key <span class="dot" title="The secret key is used for editing or deleting the tulpa's data">(?)</span></th>
+			<th></th>
+		</tr>
+		<tr>
+			<td>
+				<input type="text" name="name" placeholder="Tulpa's name" />
+			</td>
+			<td>
+				<input type="text" name="host" placeholder="Host's name" title="Please keep this identical to all your other tulpas. Everything allowed except for the '.' character" />
+			</td>
+			<td>
+				<input type="date" name="date" placeholder="Birth date" />
+			</td>
+			<td>
+				<input type="password" name="secret" placeholder="Secret key" title="The secret key is used for editing or deleting the tulpa's data" /> 
+			</td>
+			<td>
+				<button id="addTulpaBtn">Submit</button>
+			</td>
+		</table>
+		</form>
 	</div>
 	<h2 class="hidebday">Happy Birthday to</h2>
 	<ul class="hidebday" id="bday"></ul>

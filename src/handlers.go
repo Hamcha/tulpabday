@@ -47,5 +47,5 @@ func HomeHandler(rw http.ResponseWriter, req *http.Request) {
 		hostcount,
 	}
 	rendered := mustache.RenderFile("template/home.html", data)
-	fmt.Fprintf(rw, rendered)
+	fmt.Fprintln(rw, rendered)
 }
