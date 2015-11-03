@@ -26,9 +26,10 @@ func main() {
 	defer database.Close()
 
 	r := mux.NewRouter()
-	// GET - Full webpages / UI
+	// GET - Full webpages / UI / JSON Read API
 	g := r.Methods("GET").Subrouter()
 	g.HandleFunc("/", HomeHandler)
+	g.HandleFunc("/json", DumpHandler)
 	// POST - Actions
 	p := r.Methods("POST").Subrouter()
 	p.HandleFunc("/add", AddTulpa)

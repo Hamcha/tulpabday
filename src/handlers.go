@@ -7,6 +7,27 @@ import (
 	"net/http"
 )
 
+func DumpHandler(rw http.ResponseWriter, req *http.Request) {
+	// Get all tulpas in the database that we know of
+	tulpas, err := getAllTulpas()
+	if err != nil {
+		http.Error(rw, "Database error", 500)
+		return
+	}
+
+	for i := range tulpas {
+		// Strip secret keys
+		tulpas[i].Secret = ""
+	}
+
+	// Put tulpas into JSON format
+	err = json.NewEncoder(rw).Encode(tulpas)
+	if err != nil {
+		http.Error(rw, "Encoding error", 500)
+		return
+	}
+}
+
 func HomeHandler(rw http.ResponseWriter, req *http.Request) {
 	// Get all tulpas in the database that we know of
 	tulpas, err := getAllTulpas()
