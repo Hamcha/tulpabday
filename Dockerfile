@@ -1,4 +1,17 @@
-FROM golang:alpine AS builder
+FROM alpine:3.8 as kyotobuild
+
+ENV LANG en_US.UTF-8
+ENV KYOTOCABINET_VERSION 1.2.76
+
+RUN apk update && apk upgrade
+RUN apk --no-cache add libstdc++ lua go git
+RUN apk --no-cache add --virtual build-dependencies build-base zlib-dev curl lua-dev
+RUN curl -SLO http://fallabs.com/kyotocabinet/pkg/kyotocabinet-${KYOTOCABINET_VERSION}.tar.gz && \
+    tar xzvf kyotocabinet-${KYOTOCABINET_VERSION}.tar.gz
+RUN cd kyotocabinet-${KYOTOCABINET_VERSION} && \
+    ./configure CFLAGS='-std=c++98' CXXFLAGS='-std=c++98' --enable-static && \
+    make && \
+    make install
 
 ARG MODULE_PATH
 
@@ -7,19 +20,10 @@ ENV GO111MODULE=on
 
 WORKDIR /app
 
-# Get updated modules
-COPY ./ ./
-RUN cd src; go mod download
+RUN apk add git; git clone https://github.com/hamcha/tulpabday; cd tulpabday; make
 
-# Compile code
-RUN CGO_ENABLED=0 go build -o /svc ./src
+RUN apk --no-cache add lua
 
-FROM scratch AS final
+WORKDIR /app/tulpabday
 
-# Import the compiled executable from the first stage.
-COPY --from=builder /svc /svc
-COPY --from=builder /app /app
-
-WORKDIR /app
-
-CMD [ "/svc" ]
+CMD [ "/app/tulpabday/tulpaweb" ]
