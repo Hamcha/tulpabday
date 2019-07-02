@@ -1,0 +1,6 @@
+github.com/cloudflare/gokabinet v0.0.0-20160824165449-1f48e975e062 h1:QjCMQ8AcLMi6q4UYws3BiQnEn/F07RZ6e5gRi9waUU0=
+github.com/cloudflare/gokabinet v0.0.0-20160824165449-1f48e975e062/go.mod h1:cuc2WOe5VDed2Zwd4N2nWyeoOvRFd/F8goNNi9vYjRY=
+github.com/gorilla/mux v1.7.3 h1:gnP5JzjVOuiZD07fKKToCAOjS0yOpj/qPETTXCCS6hw=
+github.com/gorilla/mux v1.7.3/go.mod h1:1lud6UwP+6orDFRuTfBEV8e9/aOM/c4fVVCaMa2zaAs=
+github.com/hoisie/mustache v0.0.0-20160804235033-6375acf62c69 h1:umaj0TCQ9lWUUKy2DxAhEzPbwd0jnxiw1EI2z3FiILM=
+github.com/hoisie/mustache v0.0.0-20160804235033-6375acf62c69/go.mod h1:zdLK9ilQRSMjSeLKoZ4BqUfBT7jswTGF8zRlKEsiRXA=

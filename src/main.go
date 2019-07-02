@@ -1,11 +1,12 @@
-package main
+package main // import "github.com/hamcha/tulpabday/src"
 
 import (
 	"flag"
 	"fmt"
+	"net/http"
+
 	"github.com/cloudflare/gokabinet/kc"
 	"github.com/gorilla/mux"
-	"net/http"
 )
 
 var database *kc.DB
